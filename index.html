@@ -859,6 +859,15 @@
           link: "https://www.merrijiginn.com/"
         },
         {
+          id: "grampians-detour",
+          title: "Potential Grampians Stop-Off",
+          date: "Possible detour",
+          place: "Halls Gap / Grampians",
+          type: "optional",
+          coordinates: [-37.1409, 142.5193],
+          description: "Optional inland detour to help visualise where the Grampians sit relative to the Port Fairy and Great Ocean Road part of the trip."
+        },
+        {
           id: "apollo-bay",
           title: "Captain's At The Bay",
           date: "11 Nov to 13 Nov",
@@ -983,6 +992,15 @@
             [-38.3856, 142.2365],
             [-38.7572, 143.6705],
             [-37.8165, 144.9677]
+          ]
+        },
+        {
+          label: "Potential Grampians detour",
+          mode: "Optional detour",
+          points: [
+            [-38.3856, 142.2365],
+            [-37.1409, 142.5193],
+            [-38.7572, 143.6705]
           ]
         },
         {
@@ -1180,10 +1198,15 @@
 
       routeSegments.forEach((segment) => {
         L.polyline(segment.points, {
-          color: segment.mode === "Self-drive" ? "#a35f1e" : "#2459a8",
-          weight: segment.mode === "Self-drive" ? 4 : 3,
+          color:
+            segment.mode === "Self-drive"
+              ? "#a35f1e"
+              : segment.mode === "Optional detour"
+                ? "#8a5a9b"
+                : "#2459a8",
+          weight: segment.mode === "Self-drive" ? 4 : segment.mode === "Optional detour" ? 3 : 3,
           opacity: 0.75,
-          dashArray: segment.mode === "Self-drive" ? "" : "8 8"
+          dashArray: segment.mode === "Self-drive" ? "" : segment.mode === "Optional detour" ? "6 10" : "8 8"
         })
           .bindTooltip(`${segment.mode}: ${segment.label}`, { sticky: true })
           .addTo(map);
