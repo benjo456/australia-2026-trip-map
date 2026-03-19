@@ -1234,9 +1234,39 @@
         `;
       }
 
+      function assignDisplayCoordinates() {
+        const grouped = new Map();
+
+        points.forEach((point) => {
+          const key = point.coordinates.map((value) => value.toFixed(4)).join(",");
+          if (!grouped.has(key)) {
+            grouped.set(key, []);
+          }
+          grouped.get(key).push(point);
+        });
+
+        grouped.forEach((group) => {
+          if (group.length === 1) {
+            group[0].displayCoordinates = group[0].coordinates;
+            return;
+          }
+
+          group.forEach((point, index) => {
+            const [lat, lng] = point.coordinates;
+            const angle = (Math.PI * 2 * index) / group.length - Math.PI / 2;
+            const radiusKm = 1.2;
+            const latOffset = (radiusKm / 111) * Math.sin(angle);
+            const lngOffset = (radiusKm / (111 * Math.cos((lat * Math.PI) / 180))) * Math.cos(angle);
+            point.displayCoordinates = [lat + latOffset, lng + lngOffset];
+          });
+        });
+      }
+
+      assignDisplayCoordinates();
+
       points.forEach((point, index) => {
         const order = index + 1;
-        const marker = L.marker(point.coordinates, {
+        const marker = L.marker(point.displayCoordinates, {
           icon: markerIcon(point.type, order),
           title: point.title
         }).bindPopup(popupHtml(point));
@@ -1338,7 +1368,7 @@
           itineraryToggle.textContent = "Show itinerary list";
         }
 
-        map.flyTo(point.coordinates, point.type === "tour" ? 7 : 8, {
+        map.flyTo(marker.getLatLng(), point.type === "tour" ? 7 : 8, {
           duration: 1.1
         });
         marker.openPopup();
@@ -1346,7 +1376,7 @@
       }
 
       function fitBoundsFor(currentPoints) {
-        const bounds = L.latLngBounds(currentPoints.map((point) => point.coordinates));
+        const bounds = L.latLngBounds(currentPoints.map((point) => point.displayCoordinates || point.coordinates));
         map.fitBounds(bounds.pad(0.18));
       }
 
