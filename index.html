@@ -229,6 +229,10 @@
         gap: 12px;
       }
 
+      .itinerary-toggle {
+        display: none;
+      }
+
       .card {
         padding: 14px 14px 15px;
         border-radius: 18px;
@@ -343,26 +347,175 @@
       @media (max-width: 980px) {
         body {
           grid-template-columns: 1fr;
-          grid-template-rows: auto 58vh;
+          grid-template-rows: auto 62vh;
         }
 
         aside {
-          max-height: 42vh;
+          padding: 16px 14px 14px;
+          max-height: none;
           border-right: 0;
           border-bottom: 1px solid rgba(98, 80, 52, 0.12);
         }
 
         #map,
         main {
-          height: 58vh;
-          min-height: 58vh;
+          height: 62vh;
+          min-height: 62vh;
         }
 
         .map-overlay {
+          display: none;
+        }
+
+        .hero {
+          padding: 14px;
+          border-radius: 18px;
+        }
+
+        .hero h1 {
+          font-size: 2rem;
+          margin-bottom: 8px;
+        }
+
+        .hero p {
+          font-size: 0.92rem;
+          line-height: 1.35;
+        }
+
+        .summary {
+          gap: 8px;
+          margin: 12px 0 14px;
+        }
+
+        .stat {
+          padding: 10px;
+          border-radius: 14px;
+        }
+
+        .stat strong {
+          font-size: 1.05rem;
+        }
+
+        .controls,
+        .legend,
+        .itinerary {
+          margin-top: 14px;
+        }
+
+        .controls h2,
+        .legend h2,
+        .itinerary h2 {
+          margin-bottom: 8px;
+        }
+
+        .chip,
+        button {
+          padding: 8px 12px;
+        }
+
+        .legend {
+          display: none;
+        }
+
+        .itinerary-toggle {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          margin-bottom: 10px;
+        }
+
+        .itinerary.collapsed .cards {
+          display: none;
+        }
+      }
+
+      @media (max-width: 640px) {
+        body {
+          grid-template-rows: auto 68vh;
+        }
+
+        aside {
+          padding: 12px;
+        }
+
+        #map,
+        main {
+          height: 72vh;
+          min-height: 72vh;
+        }
+
+        .hero {
+          padding: 10px;
+          border-radius: 16px;
+        }
+
+        .hero h1 {
+          font-size: 1.45rem;
+          margin-bottom: 6px;
+        }
+
+        .hero p {
+          font-size: 0.8rem;
+          line-height: 1.3;
+        }
+
+        .summary {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 6px;
+          margin: 10px 0 12px;
+        }
+
+        .stat {
+          padding: 8px;
+        }
+
+        .stat span {
+          font-size: 0.7rem;
+        }
+
+        .filter-row,
+        .view-row {
+          gap: 6px;
+        }
+
+        .chip,
+        button {
+          font-size: 0.92rem;
+          padding: 8px 11px;
+        }
+
+        .controls,
+        .legend,
+        .itinerary {
+          margin-top: 10px;
+        }
+
+        .controls h2,
+        .legend h2,
+        .itinerary h2 {
+          font-size: 0.84rem;
+          margin-bottom: 6px;
+        }
+
+        .card {
+          padding: 12px;
+          border-radius: 16px;
+        }
+
+        .card h3 {
+          font-size: 0.98rem;
+        }
+
+        .card .meta,
+        .card .desc {
+          font-size: 0.84rem;
+          line-height: 1.35;
+        }
+
+        .leaflet-bottom.leaflet-right {
           right: 10px;
-          top: 10px;
-          left: 10px;
-          max-width: none;
+          bottom: 10px;
         }
       }
     </style>
@@ -430,6 +583,7 @@
 
       <section class="itinerary">
         <h2>Itinerary</h2>
+        <button class="itinerary-toggle active" id="itinerary-toggle">Hide itinerary list</button>
         <div class="cards" id="cards"></div>
       </section>
     </aside>
@@ -830,6 +984,8 @@
 
       const markerIndex = new Map();
       const itineraryCards = document.getElementById("cards");
+      const itinerarySection = document.querySelector(".itinerary");
+      const itineraryToggle = document.getElementById("itinerary-toggle");
       let activeFilter = "all";
       let activeCardId = null;
 
@@ -943,6 +1099,11 @@
         const point = points.find((entry) => entry.id === id);
         if (!marker || !point) return;
 
+        if (window.matchMedia("(max-width: 980px)").matches) {
+          itinerarySection.classList.add("collapsed");
+          itineraryToggle.textContent = "Show itinerary list";
+        }
+
         map.flyTo(point.coordinates, point.type === "tour" ? 7 : 8, {
           duration: 1.1
         });
@@ -1010,6 +1171,20 @@
         document.querySelectorAll(".button-secondary").forEach((button) => {
           button.classList.toggle("active", button.id === id);
         });
+      }
+
+      if (itineraryToggle) {
+        itineraryToggle.addEventListener("click", () => {
+          const collapsed = itinerarySection.classList.toggle("collapsed");
+          itineraryToggle.textContent = collapsed ? "Show itinerary list" : "Hide itinerary list";
+          itineraryToggle.classList.toggle("active", !collapsed);
+        });
+
+        if (window.matchMedia("(max-width: 980px)").matches) {
+          itinerarySection.classList.add("collapsed");
+          itineraryToggle.textContent = "Show itinerary list";
+          itineraryToggle.classList.remove("active");
+        }
       }
 
       refreshVisibility();
