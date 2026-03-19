@@ -1177,11 +1177,30 @@
       const itineraryCards = document.getElementById("cards");
       const itinerarySection = document.querySelector(".itinerary");
       const itineraryToggle = document.getElementById("itinerary-toggle");
+      const storageKeys = {
+        selectedPointId: "australiaTripMap.selectedPointId"
+      };
       let activeFilter = "all";
       let activeCardId = null;
 
       function isPhoneLayout() {
         return window.matchMedia("(max-width: 640px)").matches;
+      }
+
+      function saveSelectedPointId(id) {
+        try {
+          window.localStorage.setItem(storageKeys.selectedPointId, id);
+        } catch (_error) {
+          // Ignore storage failures and keep the map usable.
+        }
+      }
+
+      function loadSelectedPointId() {
+        try {
+          return window.localStorage.getItem(storageKeys.selectedPointId);
+        } catch (_error) {
+          return null;
+        }
       }
 
       function markerIcon(type, order) {
@@ -1342,6 +1361,7 @@
 
       function setActiveCard(id) {
         activeCardId = id;
+        saveSelectedPointId(id);
         document.querySelectorAll(".card").forEach((card) => {
           card.classList.toggle("active", card.dataset.id === id);
         });
@@ -1358,10 +1378,11 @@
         }
       }
 
-      function focusPoint(id) {
+      function focusPoint(id, options = {}) {
         const marker = markerIndex.get(id);
         const point = points.find((entry) => entry.id === id);
         if (!marker || !point) return;
+        const animate = options.animate !== false;
 
         if (window.matchMedia("(max-width: 980px)").matches && !isPhoneLayout()) {
           itinerarySection.classList.add("collapsed");
@@ -1369,7 +1390,8 @@
         }
 
         map.flyTo(marker.getLatLng(), point.type === "tour" ? 7 : 8, {
-          duration: 1.1
+          animate,
+          duration: animate ? 1.1 : 0
         });
         marker.openPopup();
         setActiveCard(id);
@@ -1461,6 +1483,13 @@
 
       refreshVisibility();
       fitBoundsFor(points);
+
+      const savedPointId = loadSelectedPointId();
+      if (savedPointId && points.some((point) => point.id === savedPointId)) {
+        requestAnimationFrame(() => {
+          focusPoint(savedPointId, { animate: false });
+        });
+      }
     </script>
   </body>
 </html>
