@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Australia trip icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8f4ec"/>
+      <stop offset="100%" stop-color="#efe3cf"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <path d="M92 146h84l52 62 70-34 70 72 52-10" fill="none" stroke="#2459a8" stroke-width="16" stroke-linecap="round" stroke-dasharray="18 20"/>
+  <path d="M92 352c62-28 124-46 180-52 36-4 84 2 148 20" fill="none" stroke="#a35f1e" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="176" cy="176" r="28" fill="#0a7d72" stroke="#fff" stroke-width="10"/>
+  <circle cx="336" cy="320" r="28" fill="#c35a2a" stroke="#fff" stroke-width="10"/>
+  <circle cx="390" cy="214" r="24" fill="#8a5a9b" stroke="#fff" stroke-width="10"/>
+  <text x="256" y="426" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="44" fill="#2f2417" font-weight="700">Aus</text>
+</svg>

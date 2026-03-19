@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Australia Trip Guide Offline</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f8f4ec;
+        --panel: rgba(255, 252, 247, 0.92);
+        --text: #2f2417;
+        --muted: #736554;
+        --accent: #9d4f2e;
+        --accent-2: #007c74;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(255, 214, 153, 0.45), transparent 30%),
+          radial-gradient(circle at bottom right, rgba(98, 173, 189, 0.28), transparent 30%),
+          linear-gradient(145deg, #f8f4ec 0%, #efe3cf 100%);
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .card {
+        width: min(720px, 100%);
+        padding: 28px;
+        border-radius: 28px;
+        background: var(--panel);
+        border: 1px solid rgba(98, 80, 52, 0.12);
+        box-shadow: 0 24px 60px rgba(53, 39, 21, 0.12);
+        backdrop-filter: blur(16px);
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1;
+      }
+
+      p {
+        margin: 0 0 14px;
+        line-height: 1.55;
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 16px;
+        border-radius: 999px;
+        text-decoration: none;
+        color: #fff;
+        background: var(--accent);
+      }
+
+      a.secondary {
+        background: var(--accent-2);
+      }
+
+      .meta {
+        margin-top: 18px;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Offline for now</h1>
+      <p>
+        The trip guide shell is cached for revisits, but map tiles and live weather
+        need a network connection.
+      </p>
+      <p>
+        Once you reopen the app online at least once, the selected itinerary point,
+        notes, and travel state remain available for offline reuse.
+      </p>
+      <div class="actions">
+        <a href="./index.html">Open app</a>
+        <a class="secondary" href="./manifest.webmanifest">App manifest</a>
+      </div>
+      <div class="meta">
+        Cached app shell, itinerary data, and saved state are handled by the service worker.
+      </div>
+    </main>
+  </body>
+</html>

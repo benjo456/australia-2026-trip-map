@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Australia trip maskable icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8f4ec"/>
+      <stop offset="100%" stop-color="#efe3cf"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+  <g transform="translate(48 48)">
+    <path d="M44 108h88l46 54 64-32 68 68 52-10" fill="none" stroke="#2459a8" stroke-width="16" stroke-linecap="round" stroke-dasharray="18 20"/>
+    <path d="M44 300c58-26 118-42 170-48 34-4 82 0 146 18" fill="none" stroke="#a35f1e" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="128" cy="136" r="28" fill="#0a7d72" stroke="#fff" stroke-width="10"/>
+    <circle cx="286" cy="272" r="28" fill="#c35a2a" stroke="#fff" stroke-width="10"/>
+    <circle cx="338" cy="176" r="24" fill="#8a5a9b" stroke="#fff" stroke-width="10"/>
+  </g>
+  <text x="256" y="430" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="44" fill="#2f2417" font-weight="700">Australia</text>
+</svg>
