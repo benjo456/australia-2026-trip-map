@@ -479,26 +479,6 @@
         }
 
         .hero {
-          position: absolute;
-          top: max(10px, env(safe-area-inset-top));
-          left: 10px;
-          right: 120px;
-          padding: 10px 12px;
-          border-radius: 22px;
-          background: rgba(255, 252, 247, 0.9);
-          border: 1px solid rgba(98, 80, 52, 0.1);
-          box-shadow: 0 12px 30px rgba(18, 27, 39, 0.12);
-          backdrop-filter: blur(16px);
-          pointer-events: auto;
-        }
-
-        .hero h1 {
-          font-size: 1.05rem;
-          margin: 0;
-          letter-spacing: 0.01em;
-        }
-
-        .hero p {
           display: none;
         }
 
@@ -517,12 +497,12 @@
           pointer-events: auto;
         }
 
-        .controls:nth-of-type(1) {
-          top: calc(max(10px, env(safe-area-inset-top)) + 58px);
+        .filter-controls {
+          top: calc(max(14px, env(safe-area-inset-top)) + 2px);
         }
 
-        .controls:nth-of-type(2) {
-          top: calc(max(10px, env(safe-area-inset-top)) + 114px);
+        .view-controls {
+          display: none;
         }
 
         .controls h2 {
@@ -536,7 +516,7 @@
           gap: 8px;
           overflow-x: auto;
           overflow-y: hidden;
-          padding: 2px 2px 6px;
+          padding: 0 2px 4px;
           -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
         }
@@ -694,7 +674,7 @@
         </div>
       </section>
 
-      <section class="controls">
+      <section class="controls filter-controls">
         <h2>Filter Points</h2>
         <div class="filter-row" id="filter-row">
           <button class="chip active" data-filter="all">All</button>
@@ -705,7 +685,7 @@
         </div>
       </section>
 
-      <section class="controls">
+      <section class="controls view-controls">
         <h2>Map View</h2>
         <div class="view-row">
           <button class="button-secondary active" id="fit-all">Whole trip</button>
