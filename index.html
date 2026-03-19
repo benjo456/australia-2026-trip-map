@@ -845,7 +845,7 @@
           place: "Robe",
           type: "stay",
           coordinates: [-37.1636, 139.7592],
-          description: "One-night stop on the coastal drive east.",
+          description: "One-night stop on the coastal drive east. Approx onward drive to Port Fairy: 2 hr 45 min, or around 2 hr 30 min inland toward the Grampians.",
           link: "https://www.robehouse.com.au/"
         },
         {
@@ -855,7 +855,7 @@
           place: "Port Fairy",
           type: "stay",
           coordinates: [-38.3856, 142.2365],
-          description: "Two-night stay near Port Fairy before the Great Ocean Road section.",
+          description: "Two-night stay near Port Fairy before the Great Ocean Road section. Approx drive from Robe: 2 hr 45 min.",
           link: "https://www.merrijiginn.com/"
         },
         {
@@ -865,7 +865,7 @@
           place: "Halls Gap / Grampians",
           type: "optional",
           coordinates: [-37.1409, 142.5193],
-          description: "Optional inland detour to help visualise where the Grampians sit relative to the Port Fairy and Great Ocean Road part of the trip."
+          description: "Optional inland detour to help visualise where the Grampians sit relative to the Port Fairy and Great Ocean Road part of the trip. Approx drive from Robe: 2 hr 30 min, then around 3 hr 30 min on to Apollo Bay."
         },
         {
           id: "apollo-bay",
@@ -874,7 +874,7 @@
           place: "Apollo Bay",
           type: "stay",
           coordinates: [-38.7572, 143.6705],
-          description: "Apollo Bay base on the Great Ocean Road.",
+          description: "Apollo Bay base on the Great Ocean Road. Approx drive from Port Fairy: 2 hr 45 min, or about 3 hr 30 min if rerouting from the Grampians instead.",
           link: "https://captains.net.au/"
         },
         {
@@ -884,7 +884,7 @@
           place: "Melbourne",
           type: "stay",
           coordinates: [-37.8165, 144.9677],
-          description: "Melbourne city base before flying north.",
+          description: "Melbourne city base before flying north. Approx drive from Apollo Bay: 3 hr 15 min.",
           link: "https://punthill.com.au/hotels/punthill-flinders-lane/"
         },
         {
@@ -974,34 +974,78 @@
           ]
         },
         {
-          label: "Adelaide to Kangaroo Island",
-          mode: "Drive and ferry",
-          points: [
-            [-34.9247, 138.6059],
-            [-35.6058, 138.1054],
-            [-35.7244, 137.9342],
-            [-35.8138, 137.7828]
-          ]
-        },
-        {
-          label: "Road trip east",
+          label: "Adelaide to Cape Jervis",
           mode: "Self-drive",
           points: [
-            [-35.8138, 137.7828],
-            [-37.1636, 139.7592],
-            [-38.3856, 142.2365],
-            [-38.7572, 143.6705],
-            [-37.8165, 144.9677]
+            [-34.9247, 138.6059],
+            [-35.6058, 138.1054]
+          ],
+          detail: "Approx 1 hr 45 min drive"
+        },
+        {
+          label: "Cape Jervis to Penneshaw",
+          mode: "Ferry",
+          points: [
+            [-35.6058, 138.1054],
+            [-35.7244, 137.9342]
           ]
         },
         {
-          label: "Potential Grampians detour",
-          mode: "Optional detour",
+          label: "Penneshaw to CABN x Kangaroo Island",
+          mode: "Self-drive",
+          points: [
+            [-35.7244, 137.9342],
+            [-35.8138, 137.7828]
+          ],
+          detail: "Approx 1 hr drive"
+        },
+        {
+          label: "Kangaroo Island back to Robe",
+          mode: "Drive and ferry",
+          points: [
+            [-35.8138, 137.7828],
+            [-35.7244, 137.9342],
+            [-35.6058, 138.1054],
+            [-37.1636, 139.7592],
+          ],
+          detail: "Approx 4 hr 30 min drive time plus ferry crossing"
+        },
+        {
+          label: "Robe to Merrijig Inn",
+          mode: "Self-drive",
+          points: [
+            [-37.1636, 139.7592],
+            [-38.3856, 142.2365],
+          ],
+          detail: "Approx 2 hr 45 min drive"
+        },
+        {
+          label: "Merrijig Inn to Apollo Bay",
+          mode: "Self-drive",
           points: [
             [-38.3856, 142.2365],
+            [-38.7572, 143.6705],
+          ],
+          detail: "Approx 2 hr 45 min drive"
+        },
+        {
+          label: "Apollo Bay to Melbourne",
+          mode: "Self-drive",
+          points: [
+            [-38.7572, 143.6705],
+            [-37.8165, 144.9677]
+          ],
+          detail: "Approx 3 hr 15 min drive"
+        },
+        {
+          label: "Skip Merrijig via the Grampians",
+          mode: "Optional detour",
+          points: [
+            [-37.1636, 139.7592],
             [-37.1409, 142.5193],
             [-38.7572, 143.6705]
-          ]
+          ],
+          detail: "Approx 2 hr 30 min to the Grampians, then around 3 hr 30 min to Apollo Bay"
         },
         {
           label: "Melbourne to Hamilton Island",
@@ -1197,6 +1241,10 @@
       });
 
       routeSegments.forEach((segment) => {
+        const tooltipHtml = segment.detail
+          ? `<strong>${segment.mode}</strong><br>${segment.label}<br>${segment.detail}`
+          : `<strong>${segment.mode}</strong><br>${segment.label}`;
+
         L.polyline(segment.points, {
           color:
             segment.mode === "Self-drive"
@@ -1208,7 +1256,7 @@
           opacity: 0.75,
           dashArray: segment.mode === "Self-drive" ? "" : segment.mode === "Optional detour" ? "6 10" : "8 8"
         })
-          .bindTooltip(`${segment.mode}: ${segment.label}`, { sticky: true })
+          .bindTooltip(tooltipHtml, { sticky: true })
           .addTo(map);
       });
 
