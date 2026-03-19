@@ -1184,21 +1184,39 @@
         return window.matchMedia("(max-width: 640px)").matches;
       }
 
-      function markerIcon(type) {
+      function markerIcon(type, order) {
         return L.divIcon({
           className: "custom-marker",
           html: `
             <div style="
-              width: 18px;
-              height: 18px;
-              border-radius: 50%;
-              background: ${colors[type]};
-              border: 3px solid rgba(255,255,255,0.95);
-              box-shadow: 0 4px 14px rgba(0,0,0,0.22);
-            "></div>
+              position: relative;
+              width: 28px;
+              height: 28px;
+            ">
+              <div style="
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                background: ${colors[type]};
+                border: 3px solid rgba(255,255,255,0.95);
+                box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+              "></div>
+              <span style="
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ffffff;
+                font-size: 11px;
+                font-weight: 700;
+                line-height: 1;
+                pointer-events: none;
+              ">${order}</span>
+            </div>
           `,
-          iconSize: [18, 18],
-          iconAnchor: [9, 9],
+          iconSize: [28, 28],
+          iconAnchor: [14, 14],
           popupAnchor: [0, -10]
         });
       }
@@ -1216,9 +1234,10 @@
         `;
       }
 
-      points.forEach((point) => {
+      points.forEach((point, index) => {
+        const order = index + 1;
         const marker = L.marker(point.coordinates, {
-          icon: markerIcon(point.type),
+          icon: markerIcon(point.type, order),
           title: point.title
         }).bindPopup(popupHtml(point));
 
@@ -1231,7 +1250,7 @@
         card.dataset.type = point.type;
         card.dataset.id = point.id;
         card.innerHTML = `
-          <div class="date">${point.date}</div>
+          <div class="date">#${order} | ${point.date}</div>
           <h3>${point.title}</h3>
           <div class="meta">${point.place} | ${formatType(point.type)}</div>
           <div class="desc">${point.description}</div>
