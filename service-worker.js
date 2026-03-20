@@ -1,4 +1,4 @@
-const CACHE_VERSION = "2026-03-19-aus-trip-v1";
+const CACHE_VERSION = "2026-03-20-aus-trip-v2";
 const APP_CACHE = `aus-trip-app-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `aus-trip-runtime-${CACHE_VERSION}`;
 const TILE_CACHE = `aus-trip-tiles-${CACHE_VERSION}`;
