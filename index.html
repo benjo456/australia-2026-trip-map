@@ -78,7 +78,19 @@
       </section>
 
       <section class="itinerary">
-        <h2>Itinerary</h2>
+        <div class="mobile-sheet-bar">
+          <button
+            class="mobile-sheet-toggle"
+            id="mobile-sheet-toggle"
+            type="button"
+            aria-controls="cards"
+            aria-label="Expand itinerary tray"
+          >
+            <span class="mobile-sheet-handle" aria-hidden="true"></span>
+            <span class="mobile-sheet-label" id="mobile-sheet-label">Itinerary</span>
+          </button>
+        </div>
+        <h2 class="itinerary-title">Itinerary</h2>
         <button class="itinerary-toggle active" id="itinerary-toggle">Hide itinerary list</button>
         <p class="itinerary-hint">Swipe sideways through the trip stops.</p>
         <div class="cards" id="cards"></div>

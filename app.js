@@ -996,6 +996,8 @@ const itineraryCards = document.getElementById("cards");
 const itinerarySection = document.querySelector(".itinerary");
 const sidePanel = document.querySelector("aside");
 const itineraryToggle = document.getElementById("itinerary-toggle");
+const mobileSheetToggle = document.getElementById("mobile-sheet-toggle");
+const mobileSheetLabel = document.getElementById("mobile-sheet-label");
 const todaySummary = document.getElementById("today-summary");
 const nextLeg = document.getElementById("next-leg");
 const dayPlan = document.getElementById("day-plan");
@@ -1011,6 +1013,96 @@ const notesInput = document.getElementById("notes-input");
 
 let activeFilter = "all";
 let weatherRequestToken = 0;
+let mobileSheetState = "peek";
+let mobileSheetGesture = null;
+let suppressMobileSheetClick = false;
+
+const MOBILE_SHEET_STATES = {
+  hidden: "hidden",
+  peek: "peek",
+  expanded: "expanded"
+};
+
+const MOBILE_SHEET_ORDER = [
+  MOBILE_SHEET_STATES.hidden,
+  MOBILE_SHEET_STATES.peek,
+  MOBILE_SHEET_STATES.expanded
+];
+
+function getDefaultMobileSheetState() {
+  return MOBILE_SHEET_STATES.peek;
+}
+
+function updateMobileSheetLabel() {
+  if (!mobileSheetToggle || !mobileSheetLabel) {
+    return;
+  }
+
+  const meta =
+    mobileSheetState === MOBILE_SHEET_STATES.hidden
+      ? {
+          label: "Itinerary",
+          buttonLabel: "Show itinerary tray"
+        }
+      : mobileSheetState === MOBILE_SHEET_STATES.peek
+        ? {
+            label: "Itinerary",
+            buttonLabel: "Expand itinerary tray"
+          }
+        : {
+            label: "Trip Tools",
+            buttonLabel: "Collapse trip tray"
+          };
+
+  mobileSheetLabel.textContent = meta.label;
+  mobileSheetToggle.setAttribute("aria-label", meta.buttonLabel);
+  mobileSheetToggle.setAttribute(
+    "aria-expanded",
+    String(mobileSheetState === MOBILE_SHEET_STATES.expanded)
+  );
+}
+
+function applyMobileSheetState(nextState, options = {}) {
+  const normalizedState = MOBILE_SHEET_ORDER.includes(nextState)
+    ? nextState
+    : getDefaultMobileSheetState();
+
+  mobileSheetState = normalizedState;
+
+  if (!itinerarySection) {
+    return;
+  }
+
+  itinerarySection.classList.remove("sheet-hidden", "sheet-peek", "sheet-expanded");
+  itinerarySection.classList.add(`sheet-${normalizedState}`);
+
+  document.body.classList.remove(
+    "mobile-sheet-hidden",
+    "mobile-sheet-peek",
+    "mobile-sheet-expanded"
+  );
+  if (isPhoneLayout()) {
+    document.body.classList.add(`mobile-sheet-${normalizedState}`);
+  }
+
+  updateMobileSheetLabel();
+
+  if (options.scrollTop && sidePanel) {
+    sidePanel.scrollTop = 0;
+  }
+
+  if (options.invalidateMap !== false) {
+    window.setTimeout(() => {
+      map.invalidateSize();
+    }, 240);
+  }
+}
+
+function stepMobileSheet(direction) {
+  const currentIndex = MOBILE_SHEET_ORDER.indexOf(mobileSheetState);
+  const nextIndex = clamp(currentIndex + direction, 0, MOBILE_SHEET_ORDER.length - 1);
+  applyMobileSheetState(MOBILE_SHEET_ORDER[nextIndex], { scrollTop: true });
+}
 
 function markerIcon(point) {
   const status = getPointState(point.id).status;
@@ -1301,6 +1393,13 @@ function focusPoint(pointId, options = {}) {
   }
 
   setSelectedPoint(pointId);
+
+  if (isPhoneLayout() && mobileSheetState === MOBILE_SHEET_STATES.hidden) {
+    applyMobileSheetState(MOBILE_SHEET_STATES.peek, {
+      invalidateMap: false,
+      scrollTop: true
+    });
+  }
 
   if (window.matchMedia("(max-width: 980px)").matches && !isPhoneLayout()) {
     itinerarySection.classList.add("collapsed");
@@ -1880,6 +1979,88 @@ if (itineraryToggle) {
   }
 }
 
+if (mobileSheetToggle) {
+  mobileSheetToggle.addEventListener("click", () => {
+    if (!isPhoneLayout()) {
+      return;
+    }
+
+    if (suppressMobileSheetClick) {
+      suppressMobileSheetClick = false;
+      return;
+    }
+
+    if (mobileSheetState === MOBILE_SHEET_STATES.hidden) {
+      applyMobileSheetState(MOBILE_SHEET_STATES.peek, { scrollTop: true });
+      return;
+    }
+
+    if (mobileSheetState === MOBILE_SHEET_STATES.peek) {
+      applyMobileSheetState(MOBILE_SHEET_STATES.expanded, { scrollTop: true });
+      return;
+    }
+
+    applyMobileSheetState(MOBILE_SHEET_STATES.peek, { scrollTop: true });
+  });
+
+  const beginSheetGesture = (clientY) => {
+    if (!isPhoneLayout()) {
+      return;
+    }
+
+    mobileSheetGesture = {
+      startY: clientY
+    };
+  };
+
+  const endSheetGesture = (clientY) => {
+    if (!mobileSheetGesture) {
+      return;
+    }
+
+    const deltaY = clientY - mobileSheetGesture.startY;
+    mobileSheetGesture = null;
+    suppressMobileSheetClick = Math.abs(deltaY) >= 22;
+
+    if (Math.abs(deltaY) < 22) {
+      return;
+    }
+
+    if (deltaY < -34) {
+      stepMobileSheet(1);
+      return;
+    }
+
+    if (deltaY > 34) {
+      stepMobileSheet(-1);
+    }
+  };
+
+  mobileSheetToggle.addEventListener("touchstart", (event) => {
+    const touch = event.touches[0];
+    if (!touch) {
+      return;
+    }
+    beginSheetGesture(touch.clientY);
+  }, { passive: true });
+
+  mobileSheetToggle.addEventListener("touchend", (event) => {
+    const touch = event.changedTouches[0];
+    if (!touch) {
+      return;
+    }
+    endSheetGesture(touch.clientY);
+  });
+
+  mobileSheetToggle.addEventListener("mousedown", (event) => {
+    beginSheetGesture(event.clientY);
+  });
+
+  mobileSheetToggle.addEventListener("mouseup", (event) => {
+    endSheetGesture(event.clientY);
+  });
+}
+
 document.body.addEventListener("click", (event) => {
   const stopActionButton = event.target.closest("[data-stop-action]");
   if (stopActionButton) {
@@ -1955,6 +2136,15 @@ window.addEventListener("resize", () => {
 
   if (isPhoneLayout()) {
     itinerarySection.classList.remove("collapsed");
+    applyMobileSheetState(mobileSheetState || getDefaultMobileSheetState(), {
+      invalidateMap: false
+    });
+  } else {
+    document.body.classList.remove(
+      "mobile-sheet-hidden",
+      "mobile-sheet-peek",
+      "mobile-sheet-expanded"
+    );
   }
 });
 
@@ -1972,6 +2162,9 @@ applyRouteVisibility();
 refreshVisibility();
 fitBoundsFor(points);
 renderAll({ forcePlannerSync: true });
+if (isPhoneLayout()) {
+  applyMobileSheetState(getDefaultMobileSheetState(), { invalidateMap: false });
+}
 
 requestAnimationFrame(() => {
   const selectedPoint = getSelectedPoint();
@@ -1980,5 +2173,8 @@ requestAnimationFrame(() => {
   }
   if (isPhoneLayout() && sidePanel) {
     sidePanel.scrollTop = 0;
+  }
+  if (isPhoneLayout()) {
+    applyMobileSheetState(mobileSheetState, { invalidateMap: false });
   }
 });
