@@ -121,6 +121,17 @@
         margin-bottom: 10px;
       }
 
+      .companion-heading {
+        margin-top: 22px;
+      }
+
+      .companion-intro {
+        margin: 0 0 10px;
+        font-size: 0.9rem;
+        line-height: 1.45;
+        color: var(--muted);
+      }
+
       .filter-row,
       .view-row,
       .action-row {
@@ -215,7 +226,7 @@
         display: grid;
         grid-template-columns: 1fr;
         gap: 12px;
-        margin-top: 18px;
+        margin-top: 0;
       }
 
       .panel {
@@ -765,6 +776,11 @@
         .itinerary-toggle,
         .itinerary-hint {
           display: none !important;
+        }
+
+        .companion-heading,
+        .companion-intro {
+          display: none;
         }
 
         .controls {

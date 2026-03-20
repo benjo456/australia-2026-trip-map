@@ -78,8 +78,17 @@
       </section>
 
       <section class="itinerary">
+        <h2>Itinerary</h2>
+        <button class="itinerary-toggle active" id="itinerary-toggle">Hide itinerary list</button>
+        <p class="itinerary-hint">Swipe sideways through the trip stops.</p>
+        <div class="cards" id="cards"></div>
+
+        <h2 class="companion-heading">Trip Companion</h2>
+        <p class="companion-intro">
+          Extra planning tools for later. The live itinerary stays at the top.
+        </p>
         <div class="companion-shell" aria-label="Trip companion panels">
-          <details id="today-panel" class="panel panel-today" open>
+          <details id="today-panel" class="panel panel-today">
             <summary>
               <span class="panel-summary-title">Today view</span>
               <span class="panel-summary-subtitle">Next leg, day plan, and jump back to now</span>
@@ -176,11 +185,6 @@
             </div>
           </details>
         </div>
-
-        <h2>Itinerary</h2>
-        <button class="itinerary-toggle active" id="itinerary-toggle">Hide itinerary list</button>
-        <p class="itinerary-hint">Swipe sideways through the trip stops.</p>
-        <div class="cards" id="cards"></div>
       </section>
     </aside>
 
